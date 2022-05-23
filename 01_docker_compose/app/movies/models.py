@@ -100,7 +100,7 @@ class GenreFilmwork(UUIDMixin):
 
 class Person(UUIDMixin, TimeStampedMixin):
     full_name = models.TextField(_("full name"))
-
+    birth_date = models.DateField(_("birthday"), blank=True)
     film_work = models.ManyToManyField(Filmwork, through='PersonFilmwork')
 
     class Meta:
@@ -117,15 +117,16 @@ class Person(UUIDMixin, TimeStampedMixin):
         return self.full_name
 
 
+class Role(models.TextChoices):
+        DIRECTOR = 'Dir', _('Director')
+        SCREENWRITER = 'ScrWrtr', _('Screenwriter')
+        ACTOR = 'Act', _('Actor')
+
+
 class PersonFilmwork(UUIDMixin):
     film_work = models.ForeignKey('Filmwork', on_delete=models.CASCADE)
 
     person = models.ForeignKey('Person', on_delete=models.CASCADE)
-
-    class Role(models.TextChoices):
-        DIRECTOR = 'Dir', _('Director')
-        SCREENWRITER = 'ScrWrtr', _('Screenwriter')
-        ACTOR = 'Act', _('Actor')
 
     role = models.CharField(_('role'),
                             null=True,
